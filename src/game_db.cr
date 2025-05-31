@@ -69,8 +69,10 @@ module Hive
       ", @id, as: {String, Int32}
 
       locs = [
-        {3, 3}, {Hive::SIZE - 1 - 3, 3},
-        {3, Hive::SIZE - 1 - 3}, {Hive::SIZE - 1 - 3, Hive::SIZE - 1 - 3}
+        {3, 3},
+        {Hive::SIZE - 1 - 3, 3},
+        {3, Hive::SIZE - 1 - 3},
+        {Hive::SIZE - 1 - 3, Hive::SIZE - 1 - 3}
       ]
 
       players.each do |(p_id, num)|
