@@ -1,0 +1,16 @@
+name: hive
+version: 0.1.0
+license: MIT
+
+targets:
+  hive:
+    main: src/main.cr
+
+dependencies:
+  kemal:
+    github:  kemalcr/kemal
+    version: ~> 1.6
+
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3
+    version: ~> 0.21
