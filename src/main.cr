@@ -3,6 +3,8 @@ require "./lib"
 Hive.init_tables
 
 before_all do |env|
+  env.response.headers["Access-Control-Allow-Origin"] = "*"
+
   auth = env.params.query["auth"]?
   raise "client unauthorized" if auth != ENV["AUTH"]
 end
