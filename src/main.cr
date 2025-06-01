@@ -8,6 +8,9 @@ before_all do |env|
 end
 
 ws "/play" do |ws, env|
+  auth = env.params.query["auth"]?
+  raise "client unauthorized" if auth != ENV["AUTH"]
+
   p_id = env.params.query["id"]?
   g_id = env.params.query["game"]?
 
@@ -21,6 +24,9 @@ ws "/play" do |ws, env|
 end
 
 ws "/watch" do |ws|
+  auth = env.params.query["auth"]?
+  raise "client unauthorized" if auth != ENV["AUTH"]
+
   Hive::Watcher.new(ws)
 end
 
