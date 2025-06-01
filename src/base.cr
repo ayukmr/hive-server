@@ -6,7 +6,12 @@ module Hive
   @@players  = [] of Player
   @@watchers = [] of Watcher
 
-  @@db : DB::Database = DB.open("sqlite3://./data.db")
+  @@db : DB::Database = DB.open(
+    "sqlite3://#{File.join(
+      File.dirname(Process.executable_path.not_nil!),
+      "data.db"
+    )}"
+  )
 
   def self.db : DB::Database
     @@db
