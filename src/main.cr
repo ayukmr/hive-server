@@ -14,7 +14,7 @@ ws "/play" do |ws, env|
   p_id = env.params.query["id"]?
   g_id = env.params.query["game"]?
 
-  raise "client id or game not given" unless p_id && g_id
+  raise "player id or game not given" unless p_id && g_id
 
   g_id = g_id.to_i
 
