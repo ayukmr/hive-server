@@ -117,11 +117,6 @@ module Hive
       end
     end
 
-    def handle_collisions
-      hive_resets
-      average_pollen
-    end
-
     def hive_resets
       cols = Hive.db.query_all "
         SELECT p.id, o.id, p.pollen, o.pollen, p.x, p.y

@@ -16,7 +16,7 @@ module Hive
       watchers_send
 
       spawn do
-        sleep Time::Span.new(seconds: 1)
+        sleep Time::Span.new(nanoseconds: Hive::TURNS * 500_000)
 
         reset_moved
         players_send
@@ -36,11 +36,11 @@ module Hive
 
       watchers_send
 
-      if cur_turn < 20
+      if cur_turn < Hive::TURNS
         inc_turn
 
         spawn do
-          sleep Time::Span.new(seconds: 1)
+          sleep Time::Span.new(nanoseconds: Hive::TURNS * 500_000)
 
           reset_moved
           players_send
@@ -51,6 +51,11 @@ module Hive
     def handle_flowers
       tick_flowers
       collect_pollen
+    end
+
+    def handle_collisions
+      hive_resets
+      average_pollen
     end
 
     def try_finish

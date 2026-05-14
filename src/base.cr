@@ -2,6 +2,7 @@ module Hive
   GAMES = 5
   PLAYERS = 4
   SIZE = 15
+  TURNS = 200
 
   @@players  = [] of Player
   @@watchers = [] of Watcher

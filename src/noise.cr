@@ -1,5 +1,10 @@
 module Hive
   class Noise
+    GRADIENTS = [
+      {1.0, 0.0}, {-1.0, 0.0}, {0.0, 1.0}, {0.0, -1.0},
+      {1.0, 1.0}, {-1.0, 1.0}, {1.0, -1.0}, {-1.0, -1.0}
+    ]
+
     def initialize
       perm = (0..255).to_a.shuffle
       @p = Array(Int32).new(512) { |i| perm[i % 256] }
@@ -12,11 +17,6 @@ module Hive
     def lerp(t : Float64, a : Float64, b : Float64) : Float64
       a + t * (b - a)
     end
-
-    GRADIENTS = [
-      {1.0, 0.0}, {-1.0, 0.0}, {0.0, 1.0}, {0.0, -1.0},
-      {1.0, 1.0}, {-1.0, 1.0}, {1.0, -1.0}, {-1.0, -1.0}
-    ]
 
     def grad(hash : Int32, x : Float64, y : Float64) : Float64
       g = GRADIENTS[hash & 7]
