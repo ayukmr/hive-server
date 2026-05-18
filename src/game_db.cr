@@ -164,7 +164,7 @@ module Hive
       ", x, y, from
 
       Hive.db.exec "
-        UPDATE players SET pollen = pollen + ? WHERE id = ?
+        UPDATE hives SET pollen = pollen + ? WHERE player = ?
       ", pollen, to
     end
 
@@ -205,9 +205,14 @@ module Hive
         next unless hive
 
         h_player, h_pollen = hive
-        h_delta = p_id == h_player ? 1 : -1
+        h_delta = p_id == h_player ? 1 : -10
 
-        next if (h_delta == 1 && p_pollen == 0) || (h_delta == -1 && h_pollen == 0)
+        h_delta =
+          if p_id == h_player
+            {1, p_pollen}.min
+          else
+            -{10, h_pollen}.min
+          end
 
         Hive.db.exec "UPDATE players SET pollen = pollen + ? WHERE id = ?", -h_delta, p_id
 

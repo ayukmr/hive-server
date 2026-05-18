@@ -16,7 +16,7 @@ module Hive
       watchers_send
 
       spawn do
-        sleep Time::Span.new(nanoseconds: Hive::TURNS * 500_000)
+        sleep Time::Span.new(nanoseconds: (Hive::SECS * 1e9 / Hive::TURNS).to_i)
 
         reset_moved
         players_send
@@ -40,7 +40,7 @@ module Hive
         inc_turn
 
         spawn do
-          sleep Time::Span.new(nanoseconds: Hive::TURNS * 500_000)
+          sleep Time::Span.new(nanoseconds: (Hive::SECS * 1e9 / Hive::TURNS).to_i)
 
           reset_moved
           players_send
