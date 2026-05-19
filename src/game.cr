@@ -12,7 +12,9 @@ module Hive
       create_walls
       create_flowers
 
+      start_game
       inc_turn
+
       watchers_send
 
       spawn do

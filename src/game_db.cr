@@ -2,7 +2,7 @@ module Hive
   module GameDB
     def data(before_move : Bool = false)
       game = Hive.db.query_one "
-        SELECT id, turn FROM games WHERE id = ?
+        SELECT id, turn, started FROM games WHERE id = ?
       ", @id, as: Data::Game
 
       players = Hive.db.query_all "
@@ -32,7 +32,7 @@ module Hive
     end
 
     def reset
-      Hive.db.exec "UPDATE games SET turn = 0 WHERE id = ?", @id
+      Hive.db.exec "UPDATE games SET turn = 0, started = false WHERE id = ?", @id
 
       Hive.db.exec "DELETE FROM players WHERE game = ?", @id
       Hive.db.exec "DELETE FROM walls   WHERE game = ?", @id
@@ -47,7 +47,7 @@ module Hive
 
       x, y = cur_x + dx, cur_y + dy
 
-      if (0...Hive::SIZE).includes?(x) && (0..Hive::SIZE).includes?(y)
+      if (0...Hive::SIZE).includes?(x) && (0...Hive::SIZE).includes?(y)
         Hive.db.exec "
           UPDATE players
           SET x = ?, y = ?
@@ -98,7 +98,7 @@ module Hive
         (2...(Hive::SIZE - 2)).each do |x|
           sample = noise.sample(x * 4 * scale, y * 4 * scale)
 
-          next unless sample > 0.7 && !taken?(x, y)
+          next if sample <= 0.6 || taken?(x, y)
 
           Hive.db.exec "INSERT INTO walls VALUES (?, ?, ?)", @id, x, y
         end
@@ -205,11 +205,10 @@ module Hive
         next unless hive
 
         h_player, h_pollen = hive
-        h_delta = p_id == h_player ? 1 : -10
 
         h_delta =
           if p_id == h_player
-            {1, p_pollen}.min
+            p_pollen
           else
             -{10, h_pollen}.min
           end
@@ -275,6 +274,10 @@ module Hive
 
     def player_nums
       Hive.db.query_all "SELECT num FROM players WHERE game = ?", @id, as: Int32
+    end
+
+    def start_game
+      Hive.db.exec "UPDATE games SET started = true WHERE id = ?", @id
     end
 
     def inc_turn

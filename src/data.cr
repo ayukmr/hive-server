@@ -6,6 +6,7 @@ module Hive
 
       @id : Int32
       @turn : Int32
+      @started : Bool
     end
 
     class Player

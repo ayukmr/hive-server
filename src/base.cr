@@ -93,11 +93,12 @@ module Hive
     if !table_exists?("games")
       Hive.db.exec "CREATE TABLE games (
         id INTEGER PRIMARY KEY,
-        turn INTEGER DEFAULT 0
+        turn INTEGER DEFAULT 0,
+        started BOOLEAN DEFAULT FALSE
       )"
 
       GAMES.times do |g_id|
-        Hive.db.exec "INSERT INTO games VALUES (?, 0)", g_id
+        Hive.db.exec "INSERT INTO games (id) VALUES (?)", g_id
       end
     end
   end
