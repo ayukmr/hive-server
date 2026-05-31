@@ -73,12 +73,6 @@ module Hive
       free.first if !free.empty?
     end
 
-    def exec_move(p_id : String, dx : Int32, dy : Int32)
-      move_player(p_id, dx, dy)
-      set_moved(p_id)
-      watchers_send
-    end
-
     def players_send
       msg = {
         type: "next",

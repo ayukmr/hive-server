@@ -94,26 +94,38 @@ module Hive
       noise = Noise.new
       scale = 1.0 / Hive::SIZE.to_f
 
-      (2...(Hive::SIZE - 2)).each do |y|
-        (2...(Hive::SIZE - 2)).each do |x|
+      (1...Hive::SIZE // 2).each do |y|
+        (1...Hive::SIZE // 2).each do |x|
           sample = noise.sample(x * 4 * scale, y * 4 * scale)
 
           next if sample <= 0.6 || taken?(x, y)
 
+          fx = Hive::SIZE - x - 1
+          fy = Hive::SIZE - y - 1
+
           Hive.db.exec "INSERT INTO walls VALUES (?, ?, ?)", @id, x, y
+          Hive.db.exec "INSERT INTO walls VALUES (?, ?, ?)", @id, fx, y
+          Hive.db.exec "INSERT INTO walls VALUES (?, ?, ?)", @id, x, fy
+          Hive.db.exec "INSERT INTO walls VALUES (?, ?, ?)", @id, fx, fy
         end
       end
     end
 
     def create_flowers
-      rand(10...15).times do
-        x, y = rand(0...Hive::SIZE), rand(0...Hive::SIZE)
+      rand(3..4).times do
+        x, y = rand(0...Hive::SIZE // 2), rand(0...Hive::SIZE // 2)
 
         while taken?(x, y)
-          x, y = rand(0...Hive::SIZE), rand(0...Hive::SIZE)
+          x, y = rand(0...Hive::SIZE // 2), rand(0...Hive::SIZE // 2)
         end
 
+        fx = Hive::SIZE - x - 1
+        fy = Hive::SIZE - y - 1
+
         Hive.db.exec "INSERT INTO flowers (game, x, y) VALUES (?, ?, ?)", @id, x, y
+        Hive.db.exec "INSERT INTO flowers (game, x, y) VALUES (?, ?, ?)", @id, fx, y
+        Hive.db.exec "INSERT INTO flowers (game, x, y) VALUES (?, ?, ?)", @id, x, fy
+        Hive.db.exec "INSERT INTO flowers (game, x, y) VALUES (?, ?, ?)", @id, fx, fy
       end
     end
 
@@ -262,10 +274,6 @@ module Hive
 
     def set_last_pos
       Hive.db.exec "UPDATE players SET last_x = x, last_y = y WHERE game = ?", @id
-    end
-
-    def set_moved
-      Hive.db.exec "UPDATE players SET moved = TRUE WHERE id = ?", @id
     end
 
     def reset_moved

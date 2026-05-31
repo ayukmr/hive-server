@@ -23,7 +23,7 @@ module Hive
         Hive.watchers.delete(self)
       end
 
-      5.times do |g_id|
+      Hive::GAMES.times do |g_id|
         send Game.new(g_id).data.to_json
       end
     end

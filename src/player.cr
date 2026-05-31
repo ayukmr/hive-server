@@ -9,6 +9,7 @@ module Hive
       if Hive.has_id?(@id)
         error "error: socket for '#{@id}' already connected"
         ws.close
+        return
       end
 
       Hive.players.push(self)
