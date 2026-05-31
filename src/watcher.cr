@@ -14,6 +14,10 @@ module Hive
 
           game.reset
           game.watchers_send
+
+          Hive.players
+            .select { |socket| socket.in_game?(g_id) }
+            .each   { |socket| socket.close }
         else
           error "error: invalid message type '#{type}'"
         end

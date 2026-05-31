@@ -12,5 +12,9 @@ module Hive
     def error(msg : String)
       send ({ type: "error", message: msg }).to_json
     end
+
+    def close
+      @ws.close
+    end
   end
 end
